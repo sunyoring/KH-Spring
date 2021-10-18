@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 객체의 의존성 주입을 위한 xml  -->
+	<!-- 1. 생성자를 통한 의존성 주입 -->
+	<bean id="person1" class="com.kh.spring.di.model.xml.Person">
+		<constructor-arg index="0" value="김선효"/>
+		<constructor-arg index="1" ref="food1"/>
+	</bean>
+	<bean id ="food1" class ="com.kh.spring.di.model.xml.Chicken"/>
+	
+	
+	<!-- 2. setter를 통한 의존성 주입 -->
+	<bean id="person2" class="com.kh.spring.di.model.xml.Person">
+		<property name="name" value="로운"/>
+		<property name="myFood" ref="food2"/>
+	</bean>
+	<bean id ="food2" class ="com.kh.spring.di.model.xml.Pizza"/>
+	
+</beans>
