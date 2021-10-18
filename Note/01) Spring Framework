@@ -1,0 +1,82 @@
+# ✔️ Spring Framework 란 ?
+
+ - 자바 플랫폼을 위한 오픈소스 애플리케이션 프레임워크로 간단하게 Spring이라고 불린다.
+
+동적인 웹 사이트를 개발하기 위한 여러 가지 서비스를 제공하고 있으며 대한민국 공공기관의 웹 서비스 개발 시 사용을 권장하고 있는 전자정부 프레임워의 기반 기술로서 쓰이고 있다.
+
+### Spring 공식 사이트
+
+[Spring makes Java simple.](https://spring.io/)
+
+## ✔️ Spring Framework의 특징
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bb98091b-d926-4de3-8482-ed834c97fad1/Untitled.png)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bcb64d6c-5b11-47e9-a537-ff4ef963aef0/Untitled.png)
+
+## ⚫ Spring의 구성 모듈
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d6c724bb-f20f-4fc3-b192-c8fbfd96d11e/Untitled.png)
+
+### ✔️ Data 접근 계층
+
+  - JDBC나 DB에 연결하는 모듈, Data 트랜잭션에 해당하는 기능을 담당, 영속성 프레임워크 연결 
+
+### ✔️ Web 계층 (MVC / Remoting)
+
+ - Spring Framework에서 Servlet, Struts 등 웹 구현 기술과의 연결점을 Spring MVC 구성으로 지원하기 위해 제공되는 모듈 계층
+
+ - 스프링의 리모팅 기술로 RMI, Hessian, Burlap, JAX-WS, HTTP 호출자 그리고 REST API묘듈을 제공
+
+### ✔️ AOP 계층
+
+ - Spring 에서 각 흐름 간 공통된 코드를 한 쪽으로 빼내어 필요한 시점에 해당 코드를 첨부하게 하기위해 지원하는 계층, 별도의 proxy를 두어 동작 → 객체 간 결합도를 낮출 수 있음.
+
+### ✔️ Core Container
+
+ - Spring의 핵심 부분 , 모든 스프링 관련 모듈은 이 Core Container를 기반으로 구축 , IOC ( 또는 DI) 기능을 지원하는 영역을 담당하고 있으며 BeanFactory를 기반으로 Bean 클래스들을 제어할 수 있는 기능을 지원한다.
+
+## ⚫ 동작방식
+
+### **XML 파일**
+
+- Spring 컨테이너 구동 시 한 개의 스프링 환경설정 된 xml파일을 불러오는데 이 파일이
+
+bean, aop, tansaction 등 여러 사항을 다 작성하여 구동 하는 방식 
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a37ee265-13b7-4ba4-8434-e76b2daf2ee5/Untitled.png)
+
+### @Annotation
+
+- xml 파일에는 구동시킬 수 있는 필수요소만 작성하고 소스코드에 Annotarion으로 표시하여 구동하는 방식
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d1521240-c1a1-45b9-8c61-b1f0a560ef87/Untitled.png)
+
+## ⚫ Spring MVC
+
+ - 개발로직을 Model , View , Controller 패턴으로 나누어 그 사이의 의존관계를 DI 컨테이너에서 관리하여 유연한 웹 애플리케이션을 쉽게 구현 및 개발할 수 있다.
+
+### ✔️ Spring MVC 요청 처리 과정
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cc0fa184-0444-4616-810c-9d3c8c6fa43c/Untitled.png)
+
+### ✔️ Spring MVC 구성 요소
+
+- DispatcherServlet : 클라이언트의 요청 (Request)을 전달받고, 요청에 맞는 컨트럴로가 리턴 값을 View에 전달하여 알맞은 응답(Response)을 생성해준다.
+- HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할지 결정해준다.
+- Controller : 클라이언트의 요청을 처리한 후 결과를 DispatcherServlet  에게 리턴해준다.
+- ModelAndView : 컨트롤러가 처리한 결과 정보 및 뷰 선택에 필요한 정보를 담음
+- ViewResolver : 컨트롤러의 처리 결과를 생성할 View 결정
+- View : 컨트롤러의 처리 결과 화면 생성, JSP나 Velocity 템플릿 파일 등을 View로 사용
+
+### ✔️ Spring 프로젝트 구조
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/402c96f6-ccc6-4326-8317-00c80b353167/Untitled.png)
+
+ * **main 폴더 구조**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d2519557-6577-471b-aba7-84279a54e1e9/Untitled.png)
+
+ * **webapp 폴더 구조**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/51bc6b78-1bce-4d33-af43-fb3953339323/Untitled.png)
