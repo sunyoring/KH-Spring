@@ -3,15 +3,18 @@ package com.kh.spring.member.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
 import com.kh.spring.member.model.vo.Member;
@@ -19,14 +22,33 @@ import com.kh.spring.member.model.vo.Member;
 @SessionAttributes("loginUser") // Model에 loginUser라는 키값으로 객체가 추가되면 자동으로 세션에 추가해주는 어노테이션
 @Controller // bean스캐닝을 통해 자동으로 Controller타입으로 등록 됨
 public class MemberController {
+	
+	
+	
+	/*error-page
+	 * exception-type
+	 * ExceptionHandler
+	 * ControllerAdVICE + ExceptionHandler
+	 * */
+	
+	/*
+	 * @ExceptionHandler(value=BadSqlGrammarException.class) public ModelAndView
+	 * controllerExceptionHandler(Exception e) { e.printStackTrace(); return new
+	 * ModelAndView("common/errorPageServer").addObject("msg",e.getMessage()); }
+	 */
+	
+	/*
+	 * @ExceptionHandler(value=BadSqlGrammarException.class) public ModelAndView
+	 * controllerExceptionHandler(Exception e) { e.printStackTrace(); return new
+	 * ModelAndView("common/errorPage").addObject("msg",e.getMessage()); }
+	 */
 
 	@Autowired // 빈스캐닝을 통해서 인터페이스를 구현한 구현체를 찾아 등록시켜줌 (구현체에는 @Service 어노테이션이 등록되어 있어야 함)
 	private MemberService memberService;
 
-	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	// 파라미터를 전송 받는 방법
 	/*
 	 * 1. HttpServletRequest를 통해 전송 받기 (기존 jsp/servlet 방식 )
@@ -147,24 +169,18 @@ public class MemberController {
 
 	/* 3. @SessionAttribute 어노테이션 사용하기 */
 
-	@RequestMapping(value = "login.me", method = RequestMethod.POST)
-	public String loginMember(Member m, Model model) {
-		// Model 객체의 스코프는 request이다
-
-		Member loginUser;
-		try {
-			loginUser = memberService.loginMember(m);
-			System.out.println(loginUser);
-			model.addAttribute("loginUser", loginUser);
-			return "redirect:/";
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			model.addAttribute("msg", "로그인 실패");
-		}
-		return "common/errorPage";
-
-	}
+	/*
+	 * @RequestMapping(value = "login.me", method = RequestMethod.POST) public
+	 * String loginMember(Member m, Model model) { // Model 객체의 스코프는 request이다
+	 * 
+	 * Member loginUser; try { loginUser = memberService.loginMember(m);
+	 * System.out.println(loginUser); model.addAttribute("loginUser", loginUser);
+	 * return "redirect:/"; } catch (Exception e) { // TODO Auto-generated catch
+	 * block e.printStackTrace(); model.addAttribute("msg", "로그인 실패"); } return
+	 * "common/errorPage";
+	 * 
+	 * }
+	 */
 
 	@RequestMapping("logout.me")
 	public String logoutMember(SessionStatus status) { // 세션의 상태를 관리하는 SessionStatus 객체
@@ -183,19 +199,72 @@ public class MemberController {
 	public String insertMember(@ModelAttribute Member m, @RequestParam("post") String post,
 			@RequestParam("address1") String address1, @RequestParam("address2") String address2, HttpSession session) {
 
-		
 		m.setAddress(post + "/" + address1 + "/" + address2);
-		
+
 		System.out.println("암호화 전  :" + m.getUserPwd());
-		
+
 		String encPwd = bCryptPasswordEncoder.encode(m.getUserPwd());
 		System.out.println("암호화 후 : " + encPwd);
 		m.setUserPwd(encPwd);
-		
-		memberService.insertMember(m); 
-		
+
+		memberService.insertMember(m);
+
 		session.setAttribute("msg", "회원가입 성공");
 		return "redirect:/";
 	}
+
+	@RequestMapping(value = "login.me", method = RequestMethod.POST)
+	public String loginMember(Member m, Model model) {
+
+		Member loginUser;
+		loginUser = memberService.loginMember(bCryptPasswordEncoder, m);
+		System.out.println(loginUser);
+		model.addAttribute("loginUser", loginUser);
+		return "redirect:/";
+
+	}
+	
+	@RequestMapping("myPage.me")
+	public String myPage() {
+		return "member/myPage";
+	}
+	
+	@RequestMapping("update.me")
+	public String updateMemer(@ModelAttribute Member m, @RequestParam("post") String post,
+														@RequestParam("address1") String address1,
+														@RequestParam("address2") String address2,
+														HttpSession session, Model model) {
+		
+		m.setAddress(post + "/" + address1 +"/" +address2);
+		
+		Member userInfo = memberService.updateMember(m);
+		model.addAttribute("loginUser",userInfo);
+		
+		
+		return "member/myPage";
+	} 	
+	
+	/*
+	 * @RequestMapping("delete.me") public String deleteMember(@ModelAttribute
+	 * Member m, SessionStatus status) {
+	 * 
+	 * memberService.deleteMember(m); status.setComplete(); // 현재
+	 * 컨트롤러에 @SessionAttribute에 의해 저장된 오브젝트를 제거한다.
+	 * 
+	 * return "redirect:/";
+	 * 
+	 * }
+	 */
+	
+	@RequestMapping("delete.me")
+	public String deleteMember(String userId) {
+		
+		memberService.deleteMember(userId);
+
+		return "redirect:logout.me";
+		
+	}
+	
+	
 
 }
