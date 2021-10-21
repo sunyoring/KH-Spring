@@ -3,18 +3,16 @@ package com.kh.spring.member.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
 import com.kh.spring.member.model.vo.Member;
@@ -223,6 +221,34 @@ public class MemberController {
 		return "redirect:/";
 
 	}
+	
+	
+	@PostMapping("updatePwd.me")
+	public String updatePwd(@RequestParam("originPwd") String originPwd,
+						    @RequestParam("newPwd") String newPwd,
+						    @ModelAttribute("loginUser") Member member , HttpSession session) throws Exception {
+		
+
+		System.out.println("1 : " + originPwd);
+		System.out.println("2 : " + member.getUserPwd());
+
+		if(bCryptPasswordEncoder.matches(originPwd, member.getUserPwd())) {
+			String encNewPwd = bCryptPasswordEncoder.encode(newPwd);
+			
+			Member m = new Member();
+			m.setUserId(member.getUserId());
+			m.setUserPwd(encNewPwd);
+			memberService.updatePwd(m);
+			
+			session.setAttribute("msg", "비밀번호 변경 완료");
+		}else {
+			throw new Exception("암호가 일치하지 않습니다.");
+		}
+		
+		return "redirect:/";
+	}
+	
+	
 	
 	@RequestMapping("myPage.me")
 	public String myPage() {

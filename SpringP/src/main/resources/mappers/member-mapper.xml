@@ -41,6 +41,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	</update>
 	
+		<update id ="updatePwd" parameterType="Member">
+	update member set USER_PWD=#{userPwd} where USER_ID=#{userId}
+
+	</update>
+	
 <!-- 	<delete id = "deleteMember" parameterType = "Member">
 	delete from member where user_id=#{userId}
 	</delete> -->

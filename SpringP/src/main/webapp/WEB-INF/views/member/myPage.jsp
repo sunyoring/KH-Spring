@@ -97,6 +97,7 @@
                 <div class="btns" align="center">
                     <button type="submit" class="btn btn-primary">수정하기</button>
                     <%-- <a href="delete.me?userId=${ loginUser.userId }" class="btn btn-danger">탈퇴하기</a> --%>
+                    <button type="button" id="pwdBtn" class="btn btn-warning">비밀번호 변경하기</button>
                     <button type="button" onclick="$('#postForm').submit();" class="btn btn-danger">탈퇴하기</button>
                 </div>
             </form>
@@ -104,6 +105,37 @@
         </div>
         <br><br>
     </div>
+    <script>
+    	$("#pwdBtn").on("click",function(e){
+    		console.log("클릭");
+    		e.preventDefault();
+    		$("#pwdModal").modal("show");
+    	})
+    </script>
+    
+    	<div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">비밀번호 변경</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">X</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<form action="updatePwd.me" method="post" id="updatePwd">
+				<label style=width:200px for="originPwd"> 현재 비밀번호 : </label><input type='password' id = 'originPwd' name = 'originPwd'>
+				<label style=width:200px for="newPwd">새 비밀번호 :  </label><input type='password' id = 'newPwd' name = 'newPwd'>
+				
+				</form>
+
+				</div>
+				<div class="modal-footer">
+					<button class="btn" type="button" onclick="$('#updatePwd').submit();" data-dismiss="modal">변경</button>
+				</div>
+			</div>
+		</div>
+	</div>
     
     <form action="delete.me" method="post" id="postForm">
     	<input type="hidden" name="userId" value="${ loginUser.userId }">

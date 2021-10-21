@@ -29,6 +29,11 @@ public class MemberDao {
 		return sqlSession.delete("memberMapper.deleteMember",userId);
 	}
 
+	public int updatePwd(SqlSessionTemplate sqlSession, Member m) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("memberMapper.updatePwd", m);
+	}
+
 	/*
 	 * public int deleteMember(SqlSessionTemplate sqlSession, Member m) { // TODO
 	 * Auto-generated method stub return

@@ -93,4 +93,14 @@ public class MemberServiceImpl implements MemberService {
 			throw new CommException("회원탈퇴실패");
 		}
 	}
+
+	@Override
+	public void updatePwd(Member m) throws Exception {
+
+		int result = memberDao.updatePwd(sqlSession, m);
+		System.out.println("result : " + result);
+		if(result < 0) {
+			throw new Exception("비밀번호 변경 실패");
+		}
+	}
 }
