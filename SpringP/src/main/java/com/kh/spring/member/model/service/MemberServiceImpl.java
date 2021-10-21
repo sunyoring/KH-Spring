@@ -2,13 +2,17 @@ package com.kh.spring.member.model.service;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.spring.common.exception.CommException;
 import com.kh.spring.member.model.dao.MemberDao;
 import com.kh.spring.member.model.vo.Member;
 
+//@EnableAspectJAutoProxy
+//@Transactional(rollbackFor = Exception.class) //런타임은 자동으로 롤백되지만 예를들어 두개이상을 적을땐 {} 괄호를 사용함 , 클래스단에 적지만 메소드 위에 적어도됨
 @Service
 public class MemberServiceImpl implements MemberService {
 
@@ -57,15 +61,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member updateMember(Member m) {
+	public Member updateMember(Member m) throws Exception {
 
 		int result = memberDao.updateMember(sqlSession, m);
-		
-		if(result > 0 ) {
+	//	memberDao.insertMember(sqlSession, m);
+		if(result < 0 ) {
 			Member loginUser = memberDao.loginMember(sqlSession, m);
 			return loginUser;
 		}else {
-			throw new CommException("회원수정 실패");
+			throw new Exception("회원수정 실패");
 		}
 	}
 
